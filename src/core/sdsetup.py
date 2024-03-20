@@ -13,7 +13,14 @@ from diffusers.models import AutoencoderKL
 from diffusers import StableDiffusionPipeline
 from diffusers.utils import is_accelerate_available, is_accelerate_version
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../xtra'))
+ruta_especifica = "/content/SDFU/src/xtra"
+if ruta_especifica in sys.path:
+    print("La ruta ya está en sys.path")
+else:
+    print("La ruta no está en sys.path, añadiéndola...")
+    sys.path.append(ruta_especifica)
+
+ 
 
 from .text import multiprompt
 from .utils import img_list, load_img, makemask, isok, isset, progbar, file_list
@@ -38,6 +45,14 @@ class SDpipe(StableDiffusionPipeline):
         self.register_modules(vae=vae, text_encoder=text_encoder, tokenizer=tokenizer, unet=unet, scheduler=scheduler)
         if image_encoder is not None:
             self.register_modules(image_encoder=image_encoder)
+
+class estaclase:  
+    def __init__(self): 
+        print("importado") 
+       
+
+
+
 
 class sdfu:
     def __init__(self, a, vae=None, text_encoder=None, tokenizer=None, unet=None, scheduler=None):
