@@ -1,17 +1,8 @@
 
-
 import os
 import sys
 
 import torch
-
-#from core.sdsetup import SDfu, device
-#from core.args import main_args, samplers
-#from core.text import read_txt, multiprompt
-#from core.utils import load_img, save_img, calc_size, isok, isset, img_list, basename, progbar, save_cfg
-
-print("aca")
-
 
 
 print(sys.path)
@@ -23,6 +14,17 @@ if ruta_especifica in sys.path:
 else:
     print("La ruta no está en sys.path, añadiéndola...")
     sys.path.append(ruta_especifica)
+
+from core.sdsetup import SDfu, device
+#from core.args import main_args, samplers
+#from core.text import read_txt, multiprompt
+#from core.utils import load_img, save_img, calc_size, isok, isset, img_list, basename, progbar, save_cfg
+
+
+
+
+
+
 
 
 
