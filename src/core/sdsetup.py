@@ -1,5 +1,4 @@
 
-
 import os, sys
 import time
 import numpy as np
@@ -40,7 +39,7 @@ class SDpipe(StableDiffusionPipeline):
         if image_encoder is not None:
             self.register_modules(image_encoder=image_encoder)
 
-class SDfu:
+class sdfu:
     def __init__(self, a, vae=None, text_encoder=None, tokenizer=None, unet=None, scheduler=None):
         # settings
         self.a = a
