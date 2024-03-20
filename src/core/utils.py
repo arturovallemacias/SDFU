@@ -1,5 +1,4 @@
 
-
 import os, sys
 import numpy as np
 from PIL import Image, ImageOps
@@ -15,7 +14,7 @@ from scipy.interpolate import CubicSpline as CubSpline
 import torch
 import torch.nn.functional as F
 
-from txt2mask import Txt2Mask
+from .txt2mask import Txt2Mask
 
 device = torch.device('cuda')
 
