@@ -1,4 +1,3 @@
-
 '''Makes available the Txt2Mask class, which assists in the automatic
 assignment of masks via text prompt using clipseg.
 
@@ -41,7 +40,10 @@ CLIPSEG_SIZE = 352
 
 RESAMPLE = Image.Resampling.LANCZOS if hasattr(Image, 'Resampling') else Image.LANCZOS
 
-sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../xtra'))
+#sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../xtra'))
+sys.path.append("/content/SDFU/src/xtra")
+print(sys.path)
+
 
 from clipseg.clipseg import CLIPDensePredT
 
