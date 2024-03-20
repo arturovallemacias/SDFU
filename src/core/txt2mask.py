@@ -1,31 +1,3 @@
-'''Makes available the Txt2Mask class, which assists in the automatic
-assignment of masks via text prompt using clipseg.
-
-Here is typical usage:
-    
-    from txt2mask import Txt2Mask # SegmentedGrayscale
-    from PIL import Image
-
-    txt2mask = Txt2Mask(self.device)
-    segmented = txt2mask.segment(Image.open('/path/to/img.png'),'a bagel')
-    
-    # this will return a grayscale Image of the segmented data
-    grayscale = segmented.to_grayscale()
-
-    # this will return a semi-transparent image in which the
-    # selected object(s) are opaque and the rest is at various
-    # levels of transparency
-    transparent = segmented.to_transparent()
-
-    # this will return a masked image suitable for use in inpainting:
-    mask = segmented.to_mask(threshold=0.5)
-
-The threshold used in the call to to_mask() selects pixels for use in
-the mask that exceed the indicated confidence threshold. Values range
-from 0.0 to 1.0. The higher the threshold, the more confident the
-algorithm is. In limited testing, I have found that values around 0.5
-work fine.
-'''
 
 import os, sys
 import numpy as  np
@@ -41,8 +13,15 @@ CLIPSEG_SIZE = 352
 RESAMPLE = Image.Resampling.LANCZOS if hasattr(Image, 'Resampling') else Image.LANCZOS
 
 #sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../xtra'))
-sys.path.append("/content/SDFU/src/xtra")
-print(sys.path)
+
+
+ruta_especifica = "/content/SDFU/src/xtra"
+if ruta_especifica in sys.path:
+    print("La ruta ya está en sys.path")
+else:
+    print("La ruta no está en sys.path, añadiéndola...")
+    sys.path.append(ruta_especifica)
+
 
 
 from clipseg.clipseg import CLIPDensePredT
@@ -123,3 +102,5 @@ class Txt2Mask(object):
             scale = CLIPSEG_SIZE / image.height
         scaled_image.paste(image.resize((int(scale * image.width), int(scale * image.height)), resample=RESAMPLE),box=(0,0))
         return scaled_image
+
+
