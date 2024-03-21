@@ -4,7 +4,7 @@ import re
 
 import torch
 
-device = torch.device('cuda')
+#device = torch.device('cuda')
 
 re_attention = re.compile(
     r"""
