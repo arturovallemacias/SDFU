@@ -54,8 +54,8 @@ class main_args:
         self.verbose = False  # Verbose output
 
 # Crear una instancia de la configuración
-configuracion = ConfiguracionDefault()
+#args = ConfiguracionDefault()
 
 # Ejemplo de cómo acceder a un atributo
-print(configuracion.in_txt)  # Imprime: ''
+#print(configuracion.in_txt)  # Imprime: ''
 
