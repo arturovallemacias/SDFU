@@ -16,7 +16,8 @@ else:
     sys.path.append(ruta_especifica)
 
 #from core.sdsetup import estaclase
-from core.args import args, samplers
+from core.args import args
+#, samplers
 from core.text import read_txt, multiprompt
 from core.utils import load_img, save_img, calc_size, isok, isset, img_list, basename, progbar, save_cfg
 
