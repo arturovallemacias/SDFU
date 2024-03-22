@@ -1,3 +1,4 @@
+
 import argparse
 
 samplers = ['ddim', 'pndm', 'lms', 'euler', 'euler_a', 'uni', 'dpm', 'ddpm',  'lcm', 'orig']
@@ -12,48 +13,49 @@ def unprompt(args):
     una = args.unprompt
     return un if una is None else '' if una=='no' else una if una[-1]=='.' else un + una if una[0]==',' else ', '.join([una, un])
 
-def main_args():
-    parser = argparse.ArgumentParser(conflict_handler = 'resolve')
-    # inputs & paths
-    parser.add_argument('-t',  '--in_txt',  default='', help='Text string or file to process')
-    parser.add_argument('-pre', '--pretxt', default='', help='Prefix for input text')
-    parser.add_argument('-post','--postxt', default='', help='Postfix for input text')
-    parser.add_argument('-im', '--in_img',  default=None, help='input image or directory with images (overrides width and height)')
-    parser.add_argument('-imr','--img_ref', default=None, help='Reference image or directory with images (overrides width and height)')
-    parser.add_argument('-imw', '--imgref_weight', default=0.3, type=float, help='Weight for the reference image(s), relative to the text prompt')
-    parser.add_argument('-M',  '--mask',    default=None, help='Path to input mask for inpainting mode (overrides width and height)')
-    parser.add_argument('-un','--unprompt', default=None, help='Negative prompt to be used as a neutral [uncond] starting point')
-    parser.add_argument('-o',  '--out_dir', default="_out", help="Output directory for generated images")
-    parser.add_argument('-md', '--maindir', default='./models', help='Main SD models directory')
-    # mandatory params
-    parser.add_argument('-m',  '--model',   default='15', help="SD model to use")
-    parser.add_argument('-sm', '--sampler', default='ddim', choices=samplers)
-    parser.add_argument(       '--vae',     default='ema', help='orig, ema, mse')
-    parser.add_argument('-C','--cfg_scale', default=7.5, type=float, help="prompt guidance scale")
-    parser.add_argument('-f', '--strength', default=1, type=float, help="strength of image processing. 0 = preserve img, 1 = replace it completely")
-    parser.add_argument('-if', '--img_scale', default=None, type=float, help='image guidance scale for Instruct pix2pix. None = disabled it')
-    parser.add_argument(      '--ddim_eta', default=0., type=float)
-    parser.add_argument('-s',  '--steps',   default=50, type=int, help="number of diffusion steps")
-    parser.add_argument('-b',  '--batch',   default=1, type=int, help="batch size")
-    parser.add_argument(   '--vae_batch',   default=8, type=int, help="batch size for VAE decoding")
-    parser.add_argument('-n',  '--num',     default=1, type=int, help="Repeat prompts N times")
-    parser.add_argument('-S',  '--seed',    type=int, help="image seed")
-    # finetuned stuff
-    parser.add_argument('-rt', '--load_token', default=None, help="path to the text inversion embeddings file")
-    parser.add_argument('-rd', '--load_custom', default=None, help="path to the custom diffusion delta checkpoint")
-    parser.add_argument('-rl', '--load_lora', default=None, help="path to the LoRA file")
-    # controlnet
-    parser.add_argument('-cmod', '--control_mod', default=None, help="path to the ControlNet model")
-    parser.add_argument('-cnimg','--control_img', default=None, help="path to the ControlNet driving image (contour, pose, etc)")
-    parser.add_argument('-cts', '--control_scale', default=0.7, type=float, help="ControlNet effect scale")
-    # misc
-    parser.add_argument('-cg', '--cguide',  action='store_true', help='Use noise guidance for interpolation, instead of cond lerp')
-    parser.add_argument('-fu',  '--freeu',  action='store_true', help='Use FreeU enhancement (Fourier representations in Unet)')
-    parser.add_argument('-sag','--sag_scale', default=0, type=float, help="Self-attention guidance scale")
-    parser.add_argument('-sz', '--size',    default=None, help="image size, multiple of 8")
-    parser.add_argument('-lo', '--lowmem',  action='store_true', help='Offload subnets onto CPU for higher resolution [slower]')
-    parser.add_argument('-inv', '--invert_mask', action='store_true')
-    parser.add_argument('-ar',  '--allref',   action='store_true', help='Apply all reference images at once or pick one by one?')
-    parser.add_argument('-v',  '--verbose', action='store_true')
 
-    return parser
+class main_args:
+    def __init__(self):
+        self.in_txt = ''  # Text string or file to process
+        self.pretxt = ''  # Prefix for input text
+        self.postxt = ''  # Postfix for input text
+        self.in_img = None  # Input image or directory with images (overrides width and height)
+        self.img_ref = None  # Reference image or directory with images (overrides width and height)
+        self.imgref_weight = 0.3  # Weight for the reference image(s), relative to the text prompt
+        self.mask = None  # Path to input mask for inpainting mode (overrides width and height)
+        self.unprompt = None  # Negative prompt to be used as a neutral [uncond] starting point
+        self.out_dir = "_out"  # Output directory for generated images
+        self.maindir = './models'  # Main SD models directory
+        self.model = '15'  # SD model to use
+        self.sampler = 'ddim'  # Sampler to use
+        self.vae = 'ema'  # VAE option
+        self.cfg_scale = 7.5  # Prompt guidance scale
+        self.strength = 1  # Strength of image processing. 0 = preserve img, 1 = replace it completely
+        self.img_scale = None  # Image guidance scale for Instruct pix2pix. None = disabled it
+        self.ddim_eta = 0.  # DDIM eta
+        self.steps = 50  # Number of diffusion steps
+        self.batch = 1  # Batch size
+        self.vae_batch = 8  # Batch size for VAE decoding
+        self.num = 1  # Repeat prompts N times
+        self.seed = None  # Image seed
+        self.load_token = None  # Path to the text inversion embeddings file
+        self.load_custom = None  # Path to the custom diffusion delta checkpoint
+        self.load_lora = None  # Path to the LoRA file
+        self.control_mod = None  # Path to the ControlNet model
+        self.control_img = None  # Path to the ControlNet driving image (contour, pose, etc)
+        self.control_scale = 0.7  # ControlNet effect scale
+        self.cguide = False  # Use noise guidance for interpolation, instead of cond lerp
+        self.freeu = False  # Use FreeU enhancement (Fourier representations in Unet)
+        self.sag_scale = 0  # Self-attention guidance scale
+        self.size = None  # Image size, multiple of 8
+        self.lowmem = False  # Offload subnets onto CPU for higher resolution [slower]
+        self.invert_mask = False  # Invert mask
+        self.allref = False  # Apply all reference images at once or pick one by one?
+        self.verbose = False  # Verbose output
+
+# Crear una instancia de la configuración
+configuracion = ConfiguracionDefault()
+
+# Ejemplo de cómo acceder a un atributo
+print(configuracion.in_txt)  # Imprime: ''
+
