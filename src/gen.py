@@ -22,7 +22,7 @@ from core.utils import load_img, save_img, calc_size, isok, isset, img_list, bas
 
  
 
-@torch.no_grad()
+#@torch.no_grad()
 
 def main():
     a = main_args()
