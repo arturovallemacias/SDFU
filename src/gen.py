@@ -1,5 +1,4 @@
 
-
 import os
 import sys
 
@@ -29,8 +28,8 @@ def get_args(parser):
 @torch.no_grad()
 
 def main():
-    a = get_args(main_args())
-
+    a = main_args()
+    print(a.in_txt)
 
 if __name__ == '__main__':
     main()

@@ -16,7 +16,7 @@ def unprompt(args):
 
 class main_args:
     def __init__(self):
-        self.in_txt = ''  # Text string or file to process
+        self.in_txt = 'el desierto del namib'  # Text string or file to process
         self.pretxt = ''  # Prefix for input text
         self.postxt = ''  # Postfix for input text
         self.in_img = None  # Input image or directory with images (overrides width and height)
