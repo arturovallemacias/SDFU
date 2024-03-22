@@ -1,24 +1,34 @@
 
-
 import os
-os.environ['KMP_DUPLICATE_LIB_OK']='TRUE'
+import sys
 
 import torch
 
-from core.sdsetup import SDfu, device
-from core.args import main_args, samplers
+
+print(sys.path)
+
+
+ruta_especifica = "/content/SDFU/src/core"
+if ruta_especifica in sys.path:
+    print("La ruta ya está en sys.path")
+else:
+    print("La ruta no está en sys.path, añadiéndola...")
+    sys.path.append(ruta_especifica)
+
+from core.sdsetup import sdfu
+from core.args import args
+#, samplers
 from core.text import read_txt, multiprompt
 from core.utils import load_img, save_img, calc_size, isok, isset, img_list, basename, progbar, save_cfg
 
-def get_args(parser):
-    # override
-    parser.add_argument('-sm', '--sampler', default='pndm', choices=samplers)
-    return parser.parse_args()
+ 
 
 @torch.no_grad()
 def main():
-    a = get_args(main_args())
-    sd = SDfu(a)
+    a = args()
+
+    sd = sdfu(a)
+
     a = sd.a
 
     a.model = basename(a.model)
