@@ -27,3 +27,11 @@ def get_args(parser):
     return parser.parse_args()
 
 @torch.no_grad()
+
+def main():
+    a = get_args(main_args())
+
+
+if __name__ == '__main__':
+    main()
+
