@@ -1,4 +1,5 @@
 
+models = ['lcm', '15', '15drm', '1p2p', '2i', '21', '21v', 'vzs', 'vpot'] # lcm, 15, 15drm are uncensored
  
 class args:
     def __init__(self):
