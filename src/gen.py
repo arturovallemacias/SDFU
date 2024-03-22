@@ -1,4 +1,5 @@
 
+
 import os
 import sys
 
@@ -20,4 +21,9 @@ from core.args import main_args, samplers
 from core.text import read_txt, multiprompt
 from core.utils import load_img, save_img, calc_size, isok, isset, img_list, basename, progbar, save_cfg
 
+def get_args(parser):
+    # override
+    parser.add_argument('-sm', '--sampler', default='pndm', choices=samplers)
+    return parser.parse_args()
 
+@torch.no_grad()
