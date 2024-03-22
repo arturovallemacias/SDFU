@@ -26,7 +26,7 @@ from core.utils import load_img, save_img, calc_size, isok, isset, img_list, bas
 
 def main():
     a = main_args()
-    #print(a.in_txt)
+    print(a.in_txt)
 
 if __name__ == '__main__':
     main()
