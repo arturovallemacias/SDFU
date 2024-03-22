@@ -1,18 +1,5 @@
 
-
-samplers = ['ddim', 'pndm', 'lms', 'euler', 'euler_a', 'uni', 'dpm', 'ddpm',  'lcm', 'orig']
-models = ['lcm', '15', '15drm', '1p2p', '2i', '21', '21v', 'vzs', 'vpot'] # lcm, 15, 15drm are uncensored
-un = ""
-un = "low quality, poorly drawn, out of focus, blurry, tiled, segmented, oversaturated"
-# un += ", letters, text, titles, graffiti, typography, watermarks, writings"
-# un += ", human, people, man, girl, face"
-# un += ", ugly, deformed, disfigured, mutated, mutilated, bad anatomy, malformed hands, extra limbs"
-
-def unprompt(args):
-    una = args.unprompt
-    return un if una is None else '' if una=='no' else una if una[-1]=='.' else un + una if una[0]==',' else ', '.join([una, un])
-
-
+ 
 class args:
     def __init__(self):
         self.in_txt = 'el desierto del namib'  # Text string or file to process
@@ -52,9 +39,4 @@ class args:
         self.allref = False  # Apply all reference images at once or pick one by one?
         self.verbose = False  # Verbose output
 
-# Crear una instancia de la configuración
-#args = ConfiguracionDefault()
-
-# Ejemplo de cómo acceder a un atributo
-#print(configuracion.in_txt)  # Imprime: ''
 
