@@ -15,7 +15,7 @@ else:
     print("La ruta no está en sys.path, añadiéndola...")
     sys.path.append(ruta_especifica)
 
-#from core.sdsetup import estaclase
+from core.sdsetup import sdfu
 from core.args import args
 #, samplers
 from core.text import read_txt, multiprompt
@@ -27,7 +27,7 @@ from core.utils import load_img, save_img, calc_size, isok, isset, img_list, bas
 def main():
     a = args()
     print(a.in_txt)
-    sd = SDfu(a)
+    sd = sdfu(a)
 
 if __name__ == '__main__':
     main()
