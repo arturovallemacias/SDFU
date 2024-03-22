@@ -13,7 +13,7 @@ def unprompt(args):
     return un if una is None else '' if una=='no' else una if una[-1]=='.' else un + una if una[0]==',' else ', '.join([una, un])
 
 
-class main_args:
+class args:
     def __init__(self):
         self.in_txt = 'el desierto del namib'  # Text string or file to process
         self.pretxt = ''  # Prefix for input text
