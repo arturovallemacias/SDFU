@@ -1,5 +1,4 @@
 
-import argparse
 
 samplers = ['ddim', 'pndm', 'lms', 'euler', 'euler_a', 'uni', 'dpm', 'ddpm',  'lcm', 'orig']
 models = ['lcm', '15', '15drm', '1p2p', '2i', '21', '21v', 'vzs', 'vpot'] # lcm, 15, 15drm are uncensored
