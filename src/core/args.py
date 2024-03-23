@@ -26,7 +26,7 @@ class args:
         self.unprompt = None  # Negative prompt to be used as a neutral [uncond] starting point
         self.out_dir = "_out"  # Output directory for generated images
         self.maindir = '/content/models'  # Main SD models directory
-        self.model = '15'  # SD model to use
+        self.model = '15drm'  # SD model to use
         self.sampler = 'ddim'  # Sampler to use
         self.vae = 'ema'  # VAE option
         self.cfg_scale = 7.5  # Prompt guidance scale
