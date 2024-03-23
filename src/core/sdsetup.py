@@ -36,7 +36,7 @@ try: # colab
     iscolab = True
 except: iscolab = False
 
-
+device = torch.device('cuda')
 
 
 
