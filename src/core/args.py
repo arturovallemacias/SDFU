@@ -1,4 +1,17 @@
 
+
+samplers = ['ddim', 'pndm', 'lms', 'euler', 'euler_a', 'uni', 'dpm', 'ddpm',  'lcm', 'tcd', 'orig']
+models = ['lcm', '15', '15drm', '1p2p', '2i', '21', '21v', 'vzs', 'vpot'] # lcm, 15, 15drm are uncensored
+un = ""
+un = "low quality, poorly drawn, out of focus, blurry, tiled, segmented, oversaturated"
+# un += ", letters, text, titles, graffiti, typography, watermarks, writings"
+# un += ", human, people, man, girl, face"
+# un += ", ugly, deformed, disfigured, mutated, mutilated, bad anatomy, malformed hands, extra limbs"
+
+def unprompt(args):
+    una = args.unprompt
+    return un if una is None else '' if una=='no' else una if una[-1]=='.' else un + una if una[0]==',' else ', '.join([una, un])
+
 models = ['lcm', '15', '15drm', '1p2p', '2i', '21', '21v', 'vzs', 'vpot'] # lcm, 15, 15drm are uncensored
 
 class args:
