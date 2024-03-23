@@ -144,6 +144,51 @@ class sdfu:
         self.g_ = torch.Generator("cuda").manual_seed(self.seed)
 
 
+    def load_model_custom(self, a, vae=None, text_encoder=None, tokenizer=None, unet=None, scheduler=None):
+        # paths
+        self.clipseg_path = os.path.join(a.maindir, 'xtra/clipseg/rd64-uni.pth')
+        vtype  = a.model[-1] == 'v'
+        vidtype = a.model[0] == 'v'
+        self.subdir = 'v2v' if vtype else 'v2' if vidtype or a.model[0]=='2' else 'v1'
+
+        if vtype and not isxf: # scheduler.prediction_type == "v_prediction":
+            print(" V-models require xformers! install it or use another model"); exit()
+
+        # text input
+        txtenc_path = os.path.join(a.maindir, self.subdir, 'text-' + a.model[2:] if a.model[2:] in ['drm'] else 'text')
+        if text_encoder is None:
+            text_encoder = CLIPTextModel.from_pretrained(txtenc_path, torch_dtype=torch.float16, local_files_only=True)
+        if tokenizer is None:
+            tokenizer    = CLIPTokenizer.from_pretrained(txtenc_path, torch_dtype=torch.float16, local_files_only=True)
+        self.text_encoder = text_encoder
+        self.tokenizer = tokenizer
+
+        if unet is None:
+            unet_path = os.path.join(a.maindir, self.subdir, 'unet' + a.model)
+            if vidtype:
+                from diffusers.models import UNet3DConditionModel as UNet
+            else:
+                from diffusers.models import UNet2DConditionModel as UNet
+            unet = UNet.from_pretrained(unet_path, torch_dtype=torch.float16, local_files_only=True)
+        if not isxf and isinstance(unet.config.attention_head_dim, int): unet.set_attention_slice(unet.config.attention_head_dim // 2) # 8
+        self.unet = unet
+
+        if vae is None:
+            vae_path = 'vae'
+            if a.model[0]=='1' and a.vae != 'orig':
+                vae_path = 'vae-ft-mse' if a.vae=='mse' else 'vae-ft-ema'
+            vae_path = os.path.join(a.maindir, self.subdir, vae_path)
+            vae = AutoencoderKL.from_pretrained(vae_path, torch_dtype=torch.float16)
+        if a.lowmem: vae.enable_tiling() # higher res, more free ram
+        elif vidtype or isset(a, 'animdiff') or not isxf: vae.enable_slicing()
+        self.vae = vae
+
+        if scheduler is None:
+            scheduler = self.set_scheduler(a, self.subdir, vtype)
+        self.scheduler = scheduler
+
+        self.pipe = SDpipe(vae, text_encoder, tokenizer, unet, scheduler)
+
 
 
 
