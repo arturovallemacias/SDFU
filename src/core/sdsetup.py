@@ -144,6 +144,16 @@ class sdfu:
         self.g_ = torch.Generator("cuda").manual_seed(self.seed)
 
 
+    def load_model_external(self, model_path):
+        SDload = StableDiffusionPipeline.from_single_file if os.path.isfile(model_path) else StableDiffusionPipeline.from_pretrained
+        self.pipe = SDload(model_path, torch_dtype=torch.float16, safety_checker=None)
+        self.text_encoder = self.pipe.text_encoder
+        self.tokenizer    = self.pipe.tokenizer
+        self.unet         = self.pipe.unet
+        self.vae          = self.pipe.vae
+        self.scheduler    = self.pipe.scheduler if self.a.sampler=='orig' else self.set_scheduler(self.a)
+        self.sched_kwargs = {}
+
     def load_model_custom(self, a, vae=None, text_encoder=None, tokenizer=None, unet=None, scheduler=None):
         # paths
         self.clipseg_path = os.path.join(a.maindir, 'xtra/clipseg/rd64-uni.pth')
