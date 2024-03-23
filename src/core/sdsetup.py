@@ -38,6 +38,14 @@ except: iscolab = False
 
 device = torch.device('cuda')
 
+class SDpipe(StableDiffusionPipeline):
+    def __init__(self, vae, text_encoder, tokenizer, unet, scheduler, image_encoder=None, \
+                 safety_checker=None, feature_extractor=None, requires_safety_checker=False):
+        super().__init__(vae, text_encoder, tokenizer, unet, scheduler, image_encoder, None, None, requires_safety_checker=False)
+        self.register_modules(vae=vae, text_encoder=text_encoder, tokenizer=tokenizer, unet=unet, scheduler=scheduler)
+        if image_encoder is not None:
+            self.register_modules(image_encoder=image_encoder)
+
 
 
 class sdfu:
