@@ -12,7 +12,7 @@ class args:
         self.mask = None  # Path to input mask for inpainting mode (overrides width and height)
         self.unprompt = None  # Negative prompt to be used as a neutral [uncond] starting point
         self.out_dir = "_out"  # Output directory for generated images
-        self.maindir = '/content/modelss'  # Main SD models directory
+        self.maindir = '/content/models'  # Main SD models directory
         self.model = '15'  # SD model to use
         self.sampler = 'ddim'  # Sampler to use
         self.vae = 'ema'  # VAE option
