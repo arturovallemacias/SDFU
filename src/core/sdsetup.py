@@ -235,6 +235,41 @@ class sdfu:
             scheduler = Sched.from_pretrained(sched_path)
         return scheduler
 
+def final_setup(self, a):
+        if isxf and not isset(a, 'img_ref'): self.pipe.enable_xformers_memory_efficient_attention() # !!! breaks ip adapter
+        if isset(a, 'freeu'): self.pipe.unet.enable_freeu(s1=1.5, s2=1.6, b1=0.9, b2=0.2) # 2.1 1.4, 1.6, 0.9, 0.2, sdxl 1.3, 1.4, 0.9, 0.2
+
+        self.vae_scale = 2 ** (len(self.vae.config.block_out_channels) - 1) # 8
+        self.res = self.unet.config.sample_size * self.vae_scale # original model resolution (not for video models!)
+        try:
+            uchannels = self.unet.config.in_channels
+        except: 
+            uchannels = self.unet.in_channels
+        self.inpaintmod = uchannels==9
+        assert not (self.inpaintmod and not isset(a, 'mask')), '!! Inpainting model requires mask !!' 
+        self.depthmod = uchannels==5
+        if self.depthmod:
+            from transformers import DPTForDepthEstimation, DPTImageProcessor
+            depth_path = os.path.join(a.maindir, self.subdir, 'depth')
+            self.depth_estimator = DPTForDepthEstimation.from_pretrained(depth_path, torch_dtype=torch.float16).to(device)
+            self.feat_extractor  = DPTImageProcessor.from_pretrained(depth_path, torch_dtype=torch.float16, device=device)
+        if isset(a, 'img_scale') and a.img_scale > 0: # instruct pix2pix
+            assert not (self.use_cnet or a.cfg_scale in [0,1]), "Use either Instruct-pix2pix or Controlnet guidance"
+            a.strength = 1.
+
+        self.set_steps(a.steps, a.strength) # sampling
+
+        # enable_model_cpu_offload
+        if self.a.lowmem:
+            assert is_accelerate_available() and is_accelerate_version(">=", "0.17.0.dev0"), " Install accelerate > 0.17 for model offloading"
+            from accelerate import cpu_offload_with_hook
+            hook = None
+            for cpu_offloaded_model in [self.text_encoder, self.unet, self.vae]:
+                _, hook = cpu_offload_with_hook(cpu_offloaded_model, device, prev_module_hook=hook)
+            if self.use_cnet:
+                _, hook = cpu_offload_with_hook(self.cnet, device, prev_module_hook=hook)
+                cpu_offload_with_hook(self.cnet, device)
+            self.final_offload_hook = hook
 
 
 # sliding sampling for long videos
