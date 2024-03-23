@@ -1,4 +1,3 @@
-# based on https://github.com/isl-org/MiDaS
 
 import cv2
 import os
@@ -6,6 +5,7 @@ import torch
 import torch.nn as nn
 from torchvision.transforms import Compose
 
+import requests
 from .midas.dpt_depth import DPTDepthModel
 from .midas.midas_net import MidasNet
 from .midas.midas_net_custom import MidasNet_small
@@ -21,6 +21,33 @@ ISL_PATHS = {
 }
 
 remote_model_path = "https://huggingface.co/lllyasviel/ControlNet/resolve/main/annotator/ckpts/dpt_hybrid-midas-501f0c75.pt"
+
+
+def download_file(url, destination_folder, file_name=None):
+    if not file_name:
+        # Si no se proporciona un nombre de archivo, extraer de la URL
+        file_name = url.split('/')[-1]
+    
+    # Asegurarse de que el directorio de destino exista
+    os.makedirs(destination_folder, exist_ok=True)
+    
+    # Construir la ruta completa del archivo de destino
+    file_path = os.path.join(destination_folder, file_name)
+    
+    # Realizar la solicitud GET
+    response = requests.get(url, stream=True)
+    
+    # Verificar que la solicitud fue exitosa (código 200)
+    if response.status_code == 200:
+        # Abrir el archivo para escritura y guardar el contenido
+        with open(file_path, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=128):
+                f.write(chunk)
+        print(f"Archivo descargado en: {file_path}")
+    else:
+        print(f"Error al descargar el archivo: Código de estado {response.status_code}")
+
+
 
 
 def disabled_train(self, mode=True):
@@ -90,9 +117,10 @@ def load_model(model_type):
 
     elif model_type == "dpt_hybrid":  # DPT-Hybrid
         if not os.path.exists(model_path):
-            from basicsr.utils.download_util import load_file_from_url
-            load_file_from_url(remote_model_path, model_dir=annotator_ckpts_path)
-
+            download_file(remote_model_path, annotator_ckpts_path)
+            #from basicsr.utils.download_util import load_file_from_url
+            #load_file_from_url(remote_model_path, model_dir=annotator_ckpts_path)
+             
         model = DPTDepthModel(
             path=model_path,
             backbone="vitb_rn50_384",
@@ -166,4 +194,3 @@ class MiDaSInference(nn.Module):
         with torch.no_grad():
             prediction = self.model(x)
         return prediction
-
