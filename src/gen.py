@@ -29,7 +29,7 @@ def main():
 
     sd = sdfu(a)
 
-    # a = sd.a
+    a = sd.a
 
     # a.model = basename(a.model)
     # a.seed = sd.seed
