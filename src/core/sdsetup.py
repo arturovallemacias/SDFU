@@ -49,7 +49,7 @@ class SDpipe(StableDiffusionPipeline):
 
 
 class sdfu:
-    def __init__(self,a):
+    def __init__(self,a, vae=None, text_encoder=None, tokenizer=None, unet=None, scheduler=None):
         print(a.in_txt)
         print("act")
 
@@ -200,5 +200,64 @@ class sdfu:
         self.pipe = SDpipe(vae, text_encoder, tokenizer, unet, scheduler)
 
 
+
+# sliding sampling for long videos
+# from https://github.com/ArtVentureX/comfyui-animatediff/blob/main/animatediff/sliding_schedule.py
+def ordered_halving(val, verbose=False): # Returns fraction that has denominator that is a power of 2
+    bin_str = f"{val:064b}" # get binary value, padded with 0s for 64 bits
+    bin_flip = bin_str[::-1] # flip binary value, padding included
+    as_int = int(bin_flip, 2) # convert binary to int
+    final = as_int / (1 << 64) # divide by 1 << 64, equivalent to 2**64, or 18446744073709551616, or 1 with 64 zero's
+    if verbose: print(f"$$$$ final: {final}")
+    return final
+# generate lists of latent indices to process
+def uniform_slide(step, num_frames, ctx_size=16, ctx_stride=1, ctx_overlap=4, loop=True, verbose=False):
+    if num_frames <= ctx_size:
+        yield list(range(num_frames))
+        return
+    ctx_stride = min(ctx_stride, int(np.ceil(np.log2(num_frames / ctx_size))) + 1)
+    pad = int(round(num_frames * ordered_halving(step, verbose)))
+    fstop = num_frames + pad + (0 if loop else -ctx_overlap)
+    for ctx_step in 1 << np.arange(ctx_stride):
+        fstart = int(ordered_halving(step) * ctx_step) + pad
+        fstep = ctx_size * ctx_step - ctx_overlap
+        for j in range(fstart, fstop, fstep):
+            yield [e % num_frames for e in range(j, j + ctx_size * ctx_step, ctx_step)]
+
+class CrossAttnStoreProcessor: # processes and stores attention probabilities
+    def __init__(self):
+        self.attention_probs = None
+    def __call__(self, attn, hidden_states, encoder_hidden_states=None, attention_mask=None):
+        batch_size, sequence_length, _ = hidden_states.shape
+        attention_mask = attn.prepare_attention_mask(attention_mask, sequence_length, batch_size)
+        query = attn.to_q(hidden_states)
+        if encoder_hidden_states is None:
+            encoder_hidden_states = hidden_states
+        elif attn.norm_cross:
+            encoder_hidden_states = attn.norm_encoder_hidden_states(encoder_hidden_states)
+        key = attn.to_k(encoder_hidden_states)
+        value = attn.to_v(encoder_hidden_states)
+        query = attn.head_to_batch_dim(query)
+        key = attn.head_to_batch_dim(key)
+        value = attn.head_to_batch_dim(value)
+        self.attention_probs = attn.get_attention_scores(query, key, attention_mask)
+        hidden_states = torch.bmm(self.attention_probs, value)
+        hidden_states = attn.batch_to_head_dim(hidden_states)
+        hidden_states = attn.to_out[0](hidden_states) # linear proj
+        hidden_states = attn.to_out[1](hidden_states) # dropout
+        return hidden_states
+
+def gaussian_blur_2d(img, kernel_size, sigma):
+    ksize_half = (kernel_size - 1) * 0.5
+    x = torch.linspace(-ksize_half, ksize_half, steps=kernel_size)
+    pdf = torch.exp(-0.5 * (x / sigma).pow(2))
+    x_kernel = pdf / pdf.sum()
+    x_kernel = x_kernel.to(device=img.device, dtype=img.dtype)
+    kernel2d = torch.mm(x_kernel[:, None], x_kernel[None, :])
+    kernel2d = kernel2d.expand(img.shape[-3], 1, kernel2d.shape[0], kernel2d.shape[1])
+    padding = [kernel_size // 2, kernel_size // 2, kernel_size // 2, kernel_size // 2]
+    img = F.pad(img, padding, mode="reflect")
+    img = F.conv2d(img, kernel2d, groups=img.shape[-3])
+    return img
 
 
