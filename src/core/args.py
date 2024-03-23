@@ -16,7 +16,7 @@ models = ['lcm', '15', '15drm', '1p2p', '2i', '21', '21v', 'vzs', 'vpot'] # lcm,
 
 class args:
     def __init__(self):
-        self.in_txt = 'A very beautiful Goddess surrounded by spikes and floating thorns, with elegant dress and also with spikes, in the namib desert, very detailed'  # Text string or file to process
+        self.in_txt = 'A very beautiful Goddess surrounded by spikes and floating thorns, white skin, European, greek, with elegant dress and also with spikes, in the namib desert, very detailed'  # Text string or file to process
         self.pretxt = ''  # Prefix for input text
         self.postxt = ''  # Postfix for input text
         self.in_img = None  # Input image or directory with images (overrides width and height)
