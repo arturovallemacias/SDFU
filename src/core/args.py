@@ -32,7 +32,7 @@ class args:
         self.cfg_scale = 7.5  # Prompt guidance scale
         self.strength = 1  # Strength of image processing. 0 = preserve img, 1 = replace it completely
         self.img_scale = None  # Image guidance scale for Instruct pix2pix. None = disabled it
-        self.ddim_eta = 0.  # DDIM eta
+        self.eta = 0.  # DDIM eta
         self.steps = 50  # Number of diffusion steps
         self.batch = 1  # Batch size
         self.vae_batch = 8  # Batch size for VAE decoding
