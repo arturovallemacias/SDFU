@@ -199,6 +199,42 @@ class sdfu:
 
         self.pipe = SDpipe(vae, text_encoder, tokenizer, unet, scheduler)
 
+    def set_scheduler(self, a, subdir='', vtype=False):
+        if isset(a, 'animdiff'):
+            sched_path = os.path.join(a.maindir, 'scheduler_config-linear.json')
+        else:
+            sched_path = os.path.join(a.maindir, subdir, 'scheduler_config-%s.json' % a.model)
+        if not os.path.exists(sched_path):
+            sched_path = os.path.join(a.maindir, subdir, 'scheduler_config.json')
+        self.sched_kwargs = {"eta": a.eta} if a.sampler.lower() in ['ddim','tcd'] else {}
+        if a.sampler == 'lcm':
+            from diffusers.schedulers import LCMScheduler
+            scheduler = LCMScheduler.from_pretrained(os.path.join(a.maindir, 'lcm/scheduler/scheduler_config.json'))
+        elif a.sampler == 'dpm':
+            from diffusers.schedulers import DPMSolverMultistepScheduler
+            scheduler = DPMSolverMultistepScheduler(beta_start=0.0001, beta_end=0.02, beta_schedule="scaled_linear", solver_order=2, sample_max_value=1.)
+        else:
+            if a.sampler == 'ddim':
+                from diffusers.schedulers import DDIMScheduler as Sched
+            elif a.sampler == 'pndm':
+                from diffusers.schedulers import PNDMScheduler as Sched
+            elif a.sampler == 'euler':
+                from diffusers.schedulers import EulerDiscreteScheduler as Sched
+            elif a.sampler == 'euler_a':
+                from diffusers.schedulers import EulerAncestralDiscreteScheduler as Sched
+            elif a.sampler == 'ddpm':
+                from diffusers.schedulers import DDPMScheduler as Sched
+            elif a.sampler == 'uni':
+                from diffusers.schedulers import UniPCMultistepScheduler as Sched
+            elif a.sampler == 'lms':
+                from diffusers.schedulers import LMSDiscreteScheduler as Sched
+            elif a.sampler == 'tcd':
+                from diffusers.schedulers.scheduling_tcd import TCDScheduler as Sched
+            else:
+                print(' Unknown sampler', a.sampler); exit()
+            scheduler = Sched.from_pretrained(sched_path)
+        return scheduler
+
 
 
 # sliding sampling for long videos
