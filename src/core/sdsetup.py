@@ -139,6 +139,9 @@ class sdfu:
         self.final_setup(a)
 
 
+    def setseed(self, seed=None):
+        self.seed = seed or int((time.time()%1)*69696)
+        self.g_ = torch.Generator("cuda").manual_seed(self.seed)
 
 
 
