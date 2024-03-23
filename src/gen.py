@@ -30,14 +30,14 @@ def main():
     sd = sdfu(a)
 
     a = sd.a
-
-    # a.model = basename(a.model)
-    # a.seed = sd.seed
-    # posttxt = basename(a.in_txt) if isset(a, 'in_txt') and os.path.exists(a.in_txt) else ''
-    # postimg = basename(a.in_img) if isset(a, 'in_img') and os.path.isdir(a.in_img)  else ''
-    # if isok(posttxt) or isok(postimg):
-    #     a.out_dir = os.path.join(a.out_dir, posttxt + '-' + postimg) + '-' + a.model
-    # os.makedirs(a.out_dir, exist_ok=True)
+    print(a)
+    a.model = basename(a.model)
+    a.seed = sd.seed
+    posttxt = basename(a.in_txt) if isset(a, 'in_txt') and os.path.exists(a.in_txt) else ''
+    postimg = basename(a.in_img) if isset(a, 'in_img') and os.path.isdir(a.in_img)  else ''
+    if isok(posttxt) or isok(postimg):
+         a.out_dir = os.path.join(a.out_dir, posttxt + '-' + postimg) + '-' + a.model
+    os.makedirs(a.out_dir, exist_ok=True)
     # if a.verbose: save_cfg(a, a.out_dir)
 
     # size = None if not isset(a, 'size') else calc_size(a.size)
