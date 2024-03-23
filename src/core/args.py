@@ -47,7 +47,7 @@ class args:
         self.cguide = False  # Use noise guidance for interpolation, instead of cond lerp
         self.freeu = False  # Use FreeU enhancement (Fourier representations in Unet)
         self.sag_scale = 0  # Self-attention guidance scale
-        self.size = 1280-720  # Image size, multiple of 8
+        self.size = "1280-720"  # Image size, multiple of 8
         self.lowmem = False  # Offload subnets onto CPU for higher resolution [slower]
         self.invert_mask = False  # Invert mask
         self.allref = False  # Apply all reference images at once or pick one by one?
