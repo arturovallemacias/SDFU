@@ -31,7 +31,7 @@ def get_args(parser):
 
 @torch.no_grad()
 def main():
-    a = get_args(args())
+    a = get_args(main_args())
 
     sd = sdfu(a)
 
