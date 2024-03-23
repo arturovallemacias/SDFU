@@ -27,6 +27,16 @@ from .utils import img_list, load_img, makemask, isok, isset, progbar, file_list
 from .args import models, unprompt
 
 import logging
+logging.getLogger('diffusers').setLevel(logging.ERROR)
+try:
+    import xformers; isxf = True
+except: isxf = False
+try: # colab
+    get_ipython().__class__.__name__
+    iscolab = True
+except: iscolab = False
+
+
 
 
 
