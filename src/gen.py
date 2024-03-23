@@ -16,16 +16,22 @@ else:
     sys.path.append(ruta_especifica)
 
 from core.sdsetup import sdfu
-from core.args import args
+from core.args import args, samplers
 #, samplers
 from core.text import read_txt, multiprompt
 from core.utils import load_img, save_img, calc_size, isok, isset, img_list, basename, progbar, save_cfg
 
+def get_args(parser):
+    # override
+    parser.add_argument('-sm', '--sampler', default='pndm', choices=samplers)
+    return parser.parse_args()
 
+
+  
 
 @torch.no_grad()
 def main():
-    a = args()
+    a = get_args(args())
 
     sd = sdfu(a)
 
