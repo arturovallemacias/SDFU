@@ -5,29 +5,37 @@ cguide: False
 control_img: None 
 control_mod: None 
 control_scale: 0.7 
+curve: linear 
 eta: 0.0 
 freeu: False 
+fstep: 24 
 img_ref: None 
 img_scale: None 
 imgref_weight: 0.3 
 in_img: None 
-in_txt: A very beautiful white skin girl surrounded by spikes and floating thorns, with elegant dress and also with spikes, in the namib desert,   
+in_lats: None 
+in_txt: /content/prompts.txt 
 invert_mask: False 
+latblend: 0.7 
+lguide: False 
 load_custom: None 
 load_lora: None 
 load_token: None 
+loop: False 
 lowmem: False 
 maindir: /content/models 
 mask: None 
 model: 15drm 
-num: 1 
+num: 3 
 out_dir: _out 
+out_lats: None 
 postxt:  
 pretxt:  
 sag_scale: 0 
 sampler: ddim 
-seed: 1000 
+seed: 3 
 size: 1024-576 
+skiplast: False 
 steps: 50 
 strength: 1.0 
 unprompt: low quality, poorly drawn, out of focus, blurry, tiled, segmented, oversaturated, low quality, poorly drawn, out of focus, blurry, tiled, segmented, oversaturated 

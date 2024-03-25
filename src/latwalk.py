@@ -55,7 +55,7 @@ def main():
         a.sampler = 'ddim' # k-samplers don't work with concat-models; images slerp = full ddim sampling with inversion
     if a.latblend > 0: assert a.sampler in ['ddim', 'euler'], "Latent blending works only with euler or ddim samplers"
 
-    sd = SDfu(a)
+    sd = sdfu(a)
     a = sd.a
 
     a.model = basename(a.model)
