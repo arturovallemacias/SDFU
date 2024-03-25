@@ -3,7 +3,7 @@ import pickle
 
 import torch
 
-from core.sdsetup import SDfu
+from core.sdsetup import sdfu
 from core.args import main_args
 from core.text import multiprompt
 from core.utils import load_img, save_img, slerp, lerp, blend, calc_size, isset, read_latents, img_list, basename, progbar, cvshow, save_cfg
