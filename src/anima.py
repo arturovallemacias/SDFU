@@ -40,7 +40,7 @@ def img_out(video):
 @torch.no_grad()
 def main():
     a = get_args(main_args())
-    sd = SDfu(a)
+    sd = sdfu(a)
     a = sd.a
     os.makedirs(a.out_dir, exist_ok=True)
     gendict = {}
