@@ -10,7 +10,7 @@ warnings.filterwarnings("ignore")
 import torch
 import torch.nn.functional as F
 
-from core.sdsetup import SDfu, device
+from core.sdsetup import sdfu, device
 from core.args import main_args, samplers
 from core.text import multiprompt, txt_clean
 from core.utils import img_list, load_img, slerp, lerp, blend, framestack, basename, save_cfg, calc_size, isset
