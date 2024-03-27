@@ -21,7 +21,7 @@ def get_args(parser):
     parser.add_argument('-vf', '--frames',  default=None, type=int, help="Frame count for generated video")
     parser.add_argument('-fs', '--fstep',   default=None, type=int, help="number of frames for each interpolation step")
     parser.add_argument('-cf', '--ctx_frames',  default=16, type=int, help="frame count to process at once with sliding window sampling")
-    parser.add_argument('-ad', '--animdiff', default='models/anima', help="path to the Motion Adapter model")
+    parser.add_argument('-ad', '--animdiff', default='/models/anima', help="path to the Motion Adapter model")
     parser.add_argument(       '--curve',   default='bezier', help="Interpolating curve: bezier, parametric, custom or linear")
     parser.add_argument(       '--loop',    action='store_true')
     # override
