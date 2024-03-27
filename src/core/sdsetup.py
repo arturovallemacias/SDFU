@@ -1,4 +1,3 @@
-
 import os, sys
 import time
 import numpy as np
@@ -107,6 +106,10 @@ class sdfu:
 
         # load animatediff = before ip adapter, after custom diffusion !
         if isset(a, 'animdiff'):
+            print(a.animdiff)
+            a.animdiff = os.path.join(a.maindir, a.animdiff)
+            print(a.maindir) 
+            print(a.animdiff)
             if not os.path.exists(a.animdiff): a.animdiff = os.path.join(a.maindir, a.animdiff)
             assert os.path.exists(a.animdiff), "Not found AnimateDiff model %s" % a.animdiff
             if a.verbose: print(' loading AnimateDiff', a.animdiff)
