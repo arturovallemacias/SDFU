@@ -24,7 +24,7 @@ def main_args():
     parser.add_argument('-M',  '--mask',    default=None, help='Path to input mask for inpainting mode (overrides width and height)')
     parser.add_argument('-un','--unprompt', default=None, help='Negative prompt to be used as a neutral [uncond] starting point')
     parser.add_argument('-o',  '--out_dir', default="_out", help="Output directory for generated images")
-    parser.add_argument('-md', '--maindir', default='/content/models', help='Main SD models directory')
+    parser.add_argument('-md', '--maindir', default='/content/SDFU/models', help='Main SD models directory')
     # mandatory params
     parser.add_argument('-m',  '--model',   default='15', help="SD model to use")
     parser.add_argument('-sm', '--sampler', default='ddim', choices=samplers)
