@@ -157,13 +157,14 @@ class sdfu:
         self.clipseg_path = os.path.join(a.maindir, 'xtra/clipseg/rd64-uni.pth')
         vtype  = a.model[-1] == 'v'
         vidtype = a.model[0] == 'v'
-        self.subdir = 'v2v' if vtype else 'v2' if vidtype or a.model[0]=='2' else '/models/v1'
+        self.subdir = 'v2v' if vtype else 'v2' if vidtype or a.model[0]=='2' else 'v1'
 
         if vtype and not isxf: # scheduler.prediction_type == "v_prediction":
             print(" V-models require xformers! install it or use another model"); exit()
 
         # text input
-        txtenc_path = os.path.join(a.maindir,self.subdir, 'text-' + a.model[2:] if a.model[2:] in ['drm'] else 'text')
+        #txtenc_path = os.path.join(a.maindir,self.subdir, 'text-' + a.model[2:] if a.model[2:] in ['drm'] else 'text')
+        txtenc_path = "/content/SDFU/models/v1/text-drm"
         print(f"a.maindir: {a.maindir}") 
         print(f"self.subdir: { self.subdir}") 
         print(f" text: a model: {'text-' + a.model[2:]}")  
