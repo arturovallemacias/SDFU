@@ -108,7 +108,7 @@ class sdfu:
         if isset(a, 'animdiff'):
             print(a.animdiff)
             a.animdiff = os.path.join(a.maindir, a.animdiff)
-            print(a.maindir) 
+            print(a.maindir)
             print(a.animdiff)
             if not os.path.exists(a.animdiff): a.animdiff = os.path.join(a.maindir, a.animdiff)
             assert os.path.exists(a.animdiff), "Not found AnimateDiff model %s" % a.animdiff
@@ -164,6 +164,11 @@ class sdfu:
 
         # text input
         txtenc_path = os.path.join(a.maindir, self.subdir, 'text-' + a.model[2:] if a.model[2:] in ['drm'] else 'text')
+        print(f"a.maindir: {a.maindir}") 
+        print(f"self.subdir: { self.subdir}") 
+        print(f" text: a model: {'text-' + a.model[2:]}")  
+        print(f"txtenc_path: {txtenc_path}")  
+
         if text_encoder is None:
             text_encoder = CLIPTextModel.from_pretrained(txtenc_path, torch_dtype=torch.float16, local_files_only=True)
         if tokenizer is None:
@@ -241,10 +246,10 @@ class sdfu:
         self.res = self.unet.config.sample_size * self.vae_scale # original model resolution (not for video models!)
         try:
             uchannels = self.unet.config.in_channels
-        except: 
+        except:
             uchannels = self.unet.in_channels
         self.inpaintmod = uchannels==9
-        assert not (self.inpaintmod and not isset(a, 'mask')), '!! Inpainting model requires mask !!' 
+        assert not (self.inpaintmod and not isset(a, 'mask')), '!! Inpainting model requires mask !!'
         self.depthmod = uchannels==5
         if self.depthmod:
             from transformers import DPTForDepthEstimation, DPTImageProcessor
@@ -273,7 +278,7 @@ class sdfu:
     def setseed(self, seed=None):
         self.seed = seed or int((time.time()%1)*69696)
         self.g_ = torch.Generator("cuda").manual_seed(self.seed)
-    
+
     def set_steps(self, steps, strength=1., warmup=1, device=device):
         if self.use_lcm:
             self.scheduler.set_timesteps(steps, device, strength=strength)
@@ -410,7 +415,7 @@ class sdfu:
         loop_context = self.unet.mid_block.attentions[0].register_forward_hook(get_map_size) if self.a.sag_scale > 0 else nullcontext() # SAG
         with torch.no_grad(), self.run_scope('cuda'), loop_context:
             if cws is None or not len(cws) == len(cs): cws = [len(uc) / len(cs)] * len(cs)
-            conds = uc if cfg_scale==0 else cs if cfg_scale==1 else torch.cat([uc, cs]) if ilat is None else torch.cat([uc, uc, cs]) 
+            conds = uc if cfg_scale==0 else cs if cfg_scale==1 else torch.cat([uc, cs]) if ilat is None else torch.cat([uc, uc, cs])
             if self.a.batch > 1: conds = conds.repeat_interleave(self.a.batch, 0)
             bs = len(conds) // (len(uc) * self.a.batch)
             if cnimg is not None and len(lat.shape)==4: cnimg = cnimg.repeat_interleave(len(conds) // len(cnimg), 0)
