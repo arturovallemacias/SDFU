@@ -110,10 +110,16 @@ class sdfu:
             a.animdiff = os.path.join(a.maindir, a.animdiff)
             print(a.maindir)
             print(a.animdiff)
-            if not os.path.exists(a.animdiff): a.animdiff = os.path.join(a.maindir, a.animdiff)
-            assert os.path.exists(a.animdiff), "Not found AnimateDiff model %s" % a.animdiff
+            animpath = os.path.join(a.maindir, a.animdiff)
+            print(f"animpath: {animpath}") 
+            if not os.path.exists(animpath): a.animdiff = animpath
+            assert os.path.exists(animpath), "Not found AnimateDiff model %s" % animpath
             if a.verbose: print(' loading AnimateDiff', a.animdiff)
+            
             from diffusers.models import UNetMotionModel, MotionAdapter
+
+            print(f"a.animdiff: {a.animdiff}") 
+
             motion_adapter = MotionAdapter.from_pretrained(a.animdiff)
             self.unet = UNetMotionModel.from_unet2d(self.unet, motion_adapter)
             self.scheduler = self.set_scheduler(a) # k-samplers must be loaded after unet
