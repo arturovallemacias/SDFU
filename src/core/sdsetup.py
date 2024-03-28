@@ -158,8 +158,8 @@ class sdfu:
         vtype  = a.model[-1] == 'v'
         vidtype = a.model[0] == 'v'
         #self.subdir = 'v2v' if vtype else 'v2' if vidtype or a.model[0]=='2' else 'v1'
-        self.subdir = '/models/' + ('v2v' if vtype else 'v2' if vidtype or a.model[0]=='2' else 'v1')
         
+        self.subdir = os.path.join('/models/', 'v2v' if vtype else 'v2' if vidtype or a.model[0]=='2' else 'v1')  
 
         
         if vtype and not isxf: # scheduler.prediction_type == "v_prediction":
@@ -182,7 +182,10 @@ class sdfu:
         self.tokenizer = tokenizer
 
         if unet is None:
-            unet_path = os.path.join(a.maindir, self.subdir, 'unet' + a.model)
+            #unet_path = os.path.join(a.maindir, self.subdir, 'unet' + a.model)
+            unet_path =  "/content/SDFU/models/v1/unet15drm"
+
+
             print(f"unet 1.5: {unet_path}") 
             if vidtype:
                 from diffusers.models import UNet3DConditionModel as UNet
@@ -196,7 +199,9 @@ class sdfu:
             vae_path = 'vae'
             if a.model[0]=='1' and a.vae != 'orig':
                 vae_path = 'vae-ft-mse' if a.vae=='mse' else 'vae-ft-ema'
-            vae_path = os.path.join(a.maindir, self.subdir, vae_path)
+            #vae_path = os.path.join(a.maindir, self.subdir, vae_path)
+            vae_path = os.path.join("/content/SDFU/models/v1/",vae_path)
+            print(f"vae_path: {vae_path}") 
             vae = AutoencoderKL.from_pretrained(vae_path, torch_dtype=torch.float16)
         if a.lowmem: vae.enable_tiling() # higher res, more free ram
         elif vidtype or isset(a, 'animdiff') or not isxf: vae.enable_slicing()
