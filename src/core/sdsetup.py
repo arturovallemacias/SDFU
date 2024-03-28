@@ -214,12 +214,24 @@ class sdfu:
         self.pipe = SDpipe(vae, text_encoder, tokenizer, unet, scheduler)
 
     def set_scheduler(self, a, subdir='', vtype=False):
+        
         if isset(a, 'animdiff'):
             sched_path = os.path.join(a.maindir, 'scheduler_config-linear.json')
+            print(f"a.maindir sched: {a.maindir}") 
+            print(f"sched_path 1: {sched_path}") 
         else:
             sched_path = os.path.join(a.maindir, subdir, 'scheduler_config-%s.json' % a.model)
+            print(f"a.maindir sched: {a.maindir}") 
+            print(f"sched_path 2: {sched_path}") 
+
         if not os.path.exists(sched_path):
             sched_path = os.path.join(a.maindir, subdir, 'scheduler_config.json')
+            
+            print(f"a.maindir sched: {a.maindir}")
+            print(f"subdir: {subdir}")  
+            print(f"sched_path 2: {sched_path}") 
+
+
         self.sched_kwargs = {"eta": a.eta} if a.sampler.lower() in ['ddim','tcd'] else {}
         if a.sampler == 'lcm':
             from diffusers.schedulers import LCMScheduler
