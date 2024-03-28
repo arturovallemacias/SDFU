@@ -163,12 +163,13 @@ class sdfu:
             print(" V-models require xformers! install it or use another model"); exit()
 
         # text input
-        txtenc_path = os.path.join(a.maindir, self.subdir, 'text-' + a.model[2:] if a.model[2:] in ['drm'] else 'text')
+        txtenc_path = os.path.join(a.maindir, '/models'+self.subdir, 'text-' + a.model[2:] if a.model[2:] in ['drm'] else 'text')
         print(f"a.maindir: {a.maindir}") 
         print(f"self.subdir: { self.subdir}") 
         print(f" text: a model: {'text-' + a.model[2:]}")  
         print(f"txtenc_path: {txtenc_path}")  
-
+ 
+        
         if text_encoder is None:
             text_encoder = CLIPTextModel.from_pretrained(txtenc_path, torch_dtype=torch.float16, local_files_only=True)
         if tokenizer is None:
