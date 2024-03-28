@@ -216,17 +216,19 @@ class sdfu:
     def set_scheduler(self, a, subdir='', vtype=False):
         
         if isset(a, 'animdiff'):
-            sched_path = os.path.join(a.maindir, 'scheduler_config-linear.json')
+            #sched_path = os.path.join(a.maindir, 'scheduler_config-linear.json')
+            sched_path = "/content/SDFU/models/scheduler_config-linear.json"
             print(f"a.maindir sched: {a.maindir}") 
             print(f"sched_path 1: {sched_path}") 
         else:
-            sched_path = os.path.join(a.maindir, subdir, 'scheduler_config-%s.json' % a.model)
+            #sched_path = os.path.join(a.maindir, subdir, 'scheduler_config-%s.json' % a.model)
+            sched_path = "/content/SDFU/models/v1/scheduler_config.json"
             print(f"a.maindir sched: {a.maindir}") 
             print(f"sched_path 2: {sched_path}") 
 
         if not os.path.exists(sched_path):
-            sched_path = os.path.join(a.maindir, subdir, 'scheduler_config.json')
-            
+            #sched_path = os.path.join(a.maindir, subdir, 'scheduler_config.json')
+            sched_path = "/content/SDFU/models/v1/scheduler_config.json"
             print(f"a.maindir sched: {a.maindir}")
             print(f"subdir: {subdir}")  
             print(f"sched_path 2: {sched_path}") 
