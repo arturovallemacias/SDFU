@@ -157,8 +157,11 @@ class sdfu:
         self.clipseg_path = os.path.join(a.maindir, 'xtra/clipseg/rd64-uni.pth')
         vtype  = a.model[-1] == 'v'
         vidtype = a.model[0] == 'v'
-        self.subdir = 'v2v' if vtype else 'v2' if vidtype or a.model[0]=='2' else 'v1'
+        #self.subdir = 'v2v' if vtype else 'v2' if vidtype or a.model[0]=='2' else 'v1'
+        self.subdir = '/models/' + ('v2v' if vtype else 'v2' if vidtype or a.model[0]=='2' else 'v1')
+        
 
+        
         if vtype and not isxf: # scheduler.prediction_type == "v_prediction":
             print(" V-models require xformers! install it or use another model"); exit()
 
@@ -180,6 +183,7 @@ class sdfu:
 
         if unet is None:
             unet_path = os.path.join(a.maindir, self.subdir, 'unet' + a.model)
+            print(f"unet 1.5: {unet_path}") 
             if vidtype:
                 from diffusers.models import UNet3DConditionModel as UNet
             else:
