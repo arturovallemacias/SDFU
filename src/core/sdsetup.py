@@ -107,20 +107,21 @@ class sdfu:
         # load animatediff = before ip adapter, after custom diffusion !
         if isset(a, 'animdiff'):
             print(a.animdiff)
-            a.animdiff = os.path.join(a.maindir, a.animdiff)
+            #a.animdiff = os.path.join(a.maindir, a.animdiff)
             print(a.maindir)
             print(a.animdiff)
-            animpath = os.path.join(a.maindir, a.animdiff)
+            animpath = "/content/SDFU/models/anima"
             print(f"animpath: {animpath}") 
             if not os.path.exists(animpath): a.animdiff = animpath
             assert os.path.exists(animpath), "Not found AnimateDiff model %s" % animpath
-            if a.verbose: print(' loading AnimateDiff', a.animdiff)
+            if a.verbose: print(' loading AnimateDiff', animpath)
             
             from diffusers.models import UNetMotionModel, MotionAdapter
 
             print(f"a.animdiff: {a.animdiff}") 
-
-            motion_adapter = MotionAdapter.from_pretrained(a.animdiff)
+animpath
+            #motion_adapter = MotionAdapter.from_pretrained(a.animdiff)
+            motion_adapter = MotionAdapter.from_pretrained(animpath)
             self.unet = UNetMotionModel.from_unet2d(self.unet, motion_adapter)
             self.scheduler = self.set_scheduler(a) # k-samplers must be loaded after unet
             if not self.a.lowmem: self.unet.to(device)
