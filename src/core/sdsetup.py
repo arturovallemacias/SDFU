@@ -119,7 +119,7 @@ class sdfu:
             from diffusers.models import UNetMotionModel, MotionAdapter
 
             print(f"a.animdiff: {a.animdiff}") 
-animpath
+
             #motion_adapter = MotionAdapter.from_pretrained(a.animdiff)
             motion_adapter = MotionAdapter.from_pretrained(animpath)
             self.unet = UNetMotionModel.from_unet2d(self.unet, motion_adapter)
