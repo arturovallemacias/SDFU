@@ -16,7 +16,7 @@ import torch.nn.functional as F
 
 from .txt2mask import Txt2Mask
 
-#device = torch.device('cuda')
+device = torch.device('cuda')
 
 try: # notebook/colab
     get_ipython().__class__.__name__
